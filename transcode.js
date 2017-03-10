@@ -8,7 +8,7 @@ let Infiniteloop = require("infinite-loop");
 
 let addr = "http://192.168.2.118:8080/video";
 let quality = ["500k", "1000k", "2000k"];
-var counter = 1; //global variable
+let counter = 1; //global variable
 
 for (let i = 0; i < quality.length; i++) {
   setTimeout(
@@ -33,7 +33,9 @@ for (let i = 0; i < quality.length; i++) {
   );
 }
 
-function mp4box(counter) {
+
+function mp4box() {
+    console.log("=============================>>>>>>>>>>>>>>"+ counter);
   if (
     fs.existsSync(quality[0] + "/" + quality[0] + "_" + counter + ".mp4") &&
     fs.existsSync(quality[1] + "/" + quality[1] + "_" + counter + ".mp4") &&
@@ -51,14 +53,20 @@ function mp4box(counter) {
         }
       }
     );
+     counter++;
   }
-  counter++;
+ 
 }
 
 var loop = new Infiniteloop();
 //use loop.add to add a function
 //fisrt argument should be the fn, the rest is the fn's arguments
-loop.add(mp4box, counter).run();
+loop.add(mp4box, []);
+//loop.setInterval(200);
+loop.run();
+
 
 //-use_wallclock_as_timestamps 1 pour forcer la lecture a la bonne vitesse
 //video.pipe(tmp);
+
+
