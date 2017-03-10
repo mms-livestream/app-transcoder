@@ -8,7 +8,9 @@ let Infiniteloop = require("infinite-loop");
 
 let addr = "http://192.168.2.118:8080/video";
 let quality = ["500k", "1000k", "2000k"];
+let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable
+let counterFind = 0;
 
 for (let i = 0; i < quality.length; i++) {
   setTimeout(
@@ -55,15 +57,56 @@ function mp4box() {
     );
      counter++;
   }
- 
 }
 
-var loop = new Infiniteloop();
+
+function renameSendDelete () {
+  
+    
+    console.log("2_"+counterFind+"1.m4s");
+  if (
+    fs.existsSync("2_"+counterFind+"1.m4s") &&
+    fs.existsSync("3_"+counterFind+"1.m4s") &&
+    fs.existsSync("4_"+counterFind+"1.m4s")
+  ) {
+    var counterRename = counterFind + 1;
+    /*----- Quality 500k -----*/
+    // rename
+    fs.rename("2_"+counterFind+"1.m4s", "out"+qualityDash[0]+"_dash"+counterRename+".m4s", function(err) {
+      if ( err ) console.log('ERROR: ' + err);
+    });
+    // Send
+    //fs.createReadStream("out"+quality[0]+"_dash"+counterRename+".m4s"").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[0]+"/"+ "out"+quality[0]+"_dash"+counterRename+".m4s""));
+    //Delete
+    //fs.unlinkSync(filePath);
+
+
+    /*----- Quality 1000k -----*/
+    fs.rename("3_"+counterFind+"1.m4s", "out"+qualityDash[1]+"_dash"+counterRename+".m4s", function(err) {
+      if ( err ) console.log('ERROR: ' + err);
+    });
+    /*----- Quality 2000k -----*/
+    fs.rename("4_"+counterFind+"1.m4s", "out"+qualityDash[2]+"_dash"+counterRename+".m4s", function(err) {
+      if ( err ) console.log('ERROR: ' + err);
+    });
+    counterFind ++;
+  }
+}
+
+//loop for mp4tom4s
+var loop1 = new Infiniteloop();
 //use loop.add to add a function
 //fisrt argument should be the fn, the rest is the fn's arguments
-loop.add(mp4box, []);
-//loop.setInterval(200);
-loop.run();
+loop1.add(mp4box, []);
+loop1.setInterval(2000);
+loop1.run();
+
+
+//loop for renameSendDelete
+var loop2 = new Infiniteloop();
+loop2.add(renameSendDelete, []);
+loop2.setInterval(2000);
+loop2.run();
 
 
 //-use_wallclock_as_timestamps 1 pour forcer la lecture a la bonne vitesse
