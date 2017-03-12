@@ -11,6 +11,7 @@ let quality = ["500k", "1000k", "2000k"];
 let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable
 let counterFind = 0;
+let contentId = "127304";
 
 for (let i = 0; i < quality.length; i++) {
   setTimeout(
@@ -77,18 +78,28 @@ function renameSendDelete () {
     });
     // Send
     //fs.createReadStream("out"+quality[0]+"_dash"+counterRename+".m4s"").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[0]+"/"+ "out"+quality[0]+"_dash"+counterRename+".m4s""));
+    fs.createReadStream("out"+quality[0]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[0]+"/"+ "out"+quality[0]+"_dash"+counterRename+".m4s"));
     //Delete
-    //fs.unlinkSync(filePath);
-
+    fs.unlinkSync(quality[0] + "/" + "out" + quality[0] + "_dash" + counterRename + ".m4s");
 
     /*----- Quality 1000k -----*/
     fs.rename("3_"+counterFind+"1.m4s", "out"+qualityDash[1]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
     });
+    // Send
+    fs.createReadStream("out"+quality[1]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[1]+"/"+ "out"+quality[1]+"_dash"+counterRename+".m4s"));
+    //Delete
+    fs.unlinkSync(quality[1] + "/" + "out" + quality[1] + "_dash" + counterRename + ".m4s");
+    
     /*----- Quality 2000k -----*/
     fs.rename("4_"+counterFind+"1.m4s", "out"+qualityDash[2]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
     });
+    // Send
+    fs.createReadStream("out"+quality[2]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[2]+"/"+ "out"+quality[2]+"_dash"+counterRename+".m4s"));
+    //Delete
+    fs.unlinkSync(quality[2] + "/" + "out" + quality[2] + "_dash" + counterRename + ".m4s");
+    
     counterFind ++;
   }
 }
