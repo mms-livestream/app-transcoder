@@ -62,8 +62,6 @@ function mp4box() {
 
 
 function renameSendDelete () {
-  
-    
     console.log("2_"+counterFind+"1.m4s");
   if (
     fs.existsSync("2_"+counterFind+"1.m4s") &&
@@ -75,30 +73,37 @@ function renameSendDelete () {
     // rename
     fs.rename("2_"+counterFind+"1.m4s", "out"+qualityDash[0]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
+      // Send
+      fs.createReadStream("out"+qualityDash[0]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8000/api/content/"+contentId+"/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+counterRename+".m4s"));
     });
-    // Send
-    //fs.createReadStream("out"+quality[0]+"_dash"+counterRename+".m4s"").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[0]+"/"+ "out"+quality[0]+"_dash"+counterRename+".m4s""));
-    fs.createReadStream("out"+quality[0]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[0]+"/"+ "out"+quality[0]+"_dash"+counterRename+".m4s"));
+    
     //Delete
-    fs.unlinkSync(quality[0] + "/" + "out" + quality[0] + "_dash" + counterRename + ".m4s");
+    fs.unlinkSync(quality[0] + "/" +quality[0] + "_" + counterFind + ".mp4");
+
 
     /*----- Quality 1000k -----*/
     fs.rename("3_"+counterFind+"1.m4s", "out"+qualityDash[1]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
+      // Send
+      fs.createReadStream("out"+qualityDash[1]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8000/api/content/"+contentId+"/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+counterRename+".m4s"));
     });
-    // Send
-    fs.createReadStream("out"+quality[1]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[1]+"/"+ "out"+quality[1]+"_dash"+counterRename+".m4s"));
+    
+    
     //Delete
-    fs.unlinkSync(quality[1] + "/" + "out" + quality[1] + "_dash" + counterRename + ".m4s");
+    fs.unlinkSync(quality[1] + "/" +quality[1] + "_" + counterFind + ".mp4");
+  
     
     /*----- Quality 2000k -----*/
     fs.rename("4_"+counterFind+"1.m4s", "out"+qualityDash[2]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
+      // Send
+      fs.createReadStream("out"+qualityDash[2]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8000/api/content/"+contentId+"/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+counterRename+".m4s"));
     });
-    // Send
-    fs.createReadStream("out"+quality[2]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[2]+"/"+ "out"+quality[2]+"_dash"+counterRename+".m4s"));
+    
+    
     //Delete
-    fs.unlinkSync(quality[2] + "/" + "out" + quality[2] + "_dash" + counterRename + ".m4s");
+    fs.unlinkSync(quality[2] + "/" +quality[2] + "_" + counterFind + ".mp4");
+    
     
     counterFind ++;
   }
@@ -121,6 +126,6 @@ loop2.run();
 
 
 //-use_wallclock_as_timestamps 1 pour forcer la lecture a la bonne vitesse
-//video.pipe(tmp);
+
 
 
