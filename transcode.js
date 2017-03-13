@@ -7,11 +7,12 @@ let request = require("request");
 let Infiniteloop = require("infinite-loop");
 
 let addr = "http://192.168.2.118:8080/video";
+let destAddr = "http://192.168.2.145:9000";
 let quality = ["500k", "1000k", "2000k"];
 let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable
 let counterFind = 0;
-let contentId = "127304";
+let contentId = "12704";
 
 for (let i = 0; i < quality.length; i++) {
   setTimeout(
@@ -69,41 +70,53 @@ function renameSendDelete () {
     fs.existsSync("4_"+counterFind+"1.m4s")
   ) {
     var counterRename = counterFind + 1;
-    /*----- Quality 500k -----*/
+
+
+    /*----------------------------------- Quality 500k ---------------------------------*/
     // rename
     fs.rename("2_"+counterFind+"1.m4s", "out"+qualityDash[0]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream("out"+qualityDash[0]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8000/api/content/"+contentId+"/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream("out"+qualityDash[0]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId+"/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+counterRename+".m4s"));
     });
-    
     //Delete
     fs.unlinkSync(quality[0] + "/" +quality[0] + "_" + counterFind + ".mp4");
 
 
-    /*----- Quality 1000k -----*/
+    /*------------------------------------- Quality 1000k -------------------------------*/
     fs.rename("3_"+counterFind+"1.m4s", "out"+qualityDash[1]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream("out"+qualityDash[1]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8000/api/content/"+contentId+"/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream("out"+qualityDash[1]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId+"/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+counterRename+".m4s"));
     });
-    
-    
     //Delete
     fs.unlinkSync(quality[1] + "/" +quality[1] + "_" + counterFind + ".mp4");
   
     
-    /*----- Quality 2000k -----*/
+    /*--------------------------------------- Quality 2000k --------------------------------*/
     fs.rename("4_"+counterFind+"1.m4s", "out"+qualityDash[2]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream("out"+qualityDash[2]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8000/api/content/"+contentId+"/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream("out"+qualityDash[2]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId+"/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+counterRename+".m4s"));
     });
-    
-    
     //Delete
     fs.unlinkSync(quality[2] + "/" +quality[2] + "_" + counterFind + ".mp4");
-    
+
+
+    /*--------------------------------------Send mp4 ----------------------------------------*/
+    fs.rename("2_0.mp4", "out"+qualityDash[0]+"_dash"+".mp4", function(err) {
+      fs.createReadStream("out"+qualityDash[0]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId + "/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+".mp4"));
+    });
+
+    fs.rename("3_0.mp4", "out"+qualityDash[1]+"_dash"+".mp4", function(err) {
+      fs.createReadStream("out"+qualityDash[1]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId + "/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+".mp4"));
+    });
+
+    fs.rename("4_0.mp4", "out"+qualityDash[2]+"_dash"+".mp4", function(err) {
+      fs.createReadStream("out"+qualityDash[2]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId + "/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+".mp4"));
+    });
+
+
     
     counterFind ++;
   }
