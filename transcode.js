@@ -83,12 +83,14 @@ function renameSendDelete () {
     fs.unlinkSync(quality[0] + "/" +quality[0] + "_" + counterFind + ".mp4");
 
 
+
     /*------------------------------------- Quality 1000k -------------------------------*/
     fs.rename("3_"+counterFind+"1.m4s", "out"+qualityDash[1]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
       fs.createReadStream("out"+qualityDash[1]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId+"/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+counterRename+".m4s"));
     });
+
     //Delete
     fs.unlinkSync(quality[1] + "/" +quality[1] + "_" + counterFind + ".mp4");
   
