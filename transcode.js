@@ -78,7 +78,7 @@ function renameSendDelete () {
     });
     // Send
     //fs.createReadStream("out"+quality[0]+"_dash"+counterRename+".m4s"").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[0]+"/"+ "out"+quality[0]+"_dash"+counterRename+".m4s""));
-    fs.createReadStream("out"+quality[0]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[0]+"/"+ "out"+quality[0]+"_dash"+counterRename+".m4s"));
+    fs.createReadStream("out"+quality[0]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8080/api/content/"+contentId+"/"+quality[0]+"/"+ "out"+quality[0]+"_dash"+counterRename+".m4s"));
     //Delete
     fs.unlinkSync(quality[0] + "/" + "out" + quality[0] + "_dash" + counterRename + ".m4s");
 
@@ -87,7 +87,7 @@ function renameSendDelete () {
       if ( err ) console.log('ERROR: ' + err);
     });
     // Send
-    fs.createReadStream("out"+quality[1]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[1]+"/"+ "out"+quality[1]+"_dash"+counterRename+".m4s"));
+    fs.createReadStream("out"+quality[1]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8080/api/content/"+contentId+"/"+quality[1]+"/"+ "out"+quality[1]+"_dash"+counterRename+".m4s"));
     //Delete
     fs.unlinkSync(quality[1] + "/" + "out" + quality[1] + "_dash" + counterRename + ".m4s");
     
@@ -96,7 +96,7 @@ function renameSendDelete () {
       if ( err ) console.log('ERROR: ' + err);
     });
     // Send
-    fs.createReadStream("out"+quality[2]+"_dash"+counterRename+".m4s").pipe(request.put("localhost:8080/api/content/"+contentId+"/"+quality[2]+"/"+ "out"+quality[2]+"_dash"+counterRename+".m4s"));
+    fs.createReadStream("out"+quality[2]+"_dash"+counterRename+".m4s").pipe(request.put("http://localhost:8080/api/content/"+contentId+"/"+quality[2]+"/"+ "out"+quality[2]+"_dash"+counterRename+".m4s"));
     //Delete
     fs.unlinkSync(quality[2] + "/" + "out" + quality[2] + "_dash" + counterRename + ".m4s");
     
