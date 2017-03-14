@@ -2,7 +2,7 @@
 
 var child_process = require('child_process');
 
-let contentId = ["1234567"]; //Id uploader
+let contentId = ["123"]; //Id uploader
 let users = ["http://192.168.2.145:9000"]; //@ uploader
 
 for(let i = 0; i < contentId.length; i++){
