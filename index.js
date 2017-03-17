@@ -139,7 +139,6 @@ loop2.add(renameSendDelete, []);
 loop2.setInterval(2000);
 loop2.run();
 
-
 //-use_wallclock_as_timestamps 1 pour forcer la lecture a la bonne vitesse
 
 

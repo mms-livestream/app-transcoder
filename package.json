@@ -1,0 +1,26 @@
+{
+  "name": "app-transcoder",
+  "version": "1.0.0",
+  "description": "Transcodeur",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mms-livestream/app-transcodeur.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mms-livestream/app-transcodeur/issues"
+  },
+  "homepage": "https://github.com/mms-livestream/app-transcodeur#readme",
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "fs": "0.0.1-security",
+    "infinite-loop": "^0.2.2",
+    "request": "^2.81.0",
+    "util": "^0.10.3"
+  }
+}
