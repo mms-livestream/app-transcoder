@@ -48,7 +48,7 @@ function mp4box() {
     var counterTmp = counter - 1;
     var child;
     child = exec(
-      `MP4Box -dash 6000-profile live -bs-switching no -segment-name '$RepresentationID$_${counterTmp}' -out 'mpd.mpd' ./${quality[0]}/${quality[0]}_${counterTmp}.mp4 ./${quality[1]}/${quality[1]}_${counterTmp}.mp4 ./${quality[2]}/${quality[2]}_${counterTmp}.mp4`,
+      `MP4Box -dash 6000-profile live -bs-switching no -segment-name '$RepresentationID$_${counterTmp}' -out 'mpd.mpd' ${quality[0]}/${quality[0]}_${counterTmp}.mp4 ${quality[1]}/${quality[1]}_${counterTmp}.mp4 ${quality[2]}/${quality[2]}_${counterTmp}.mp4`,
       function(error, stdout, stderr) {
         util.print("stdout: " + stdout);
         util.print("stderr: " + stderr);

@@ -16,7 +16,7 @@ let serviceAPI = require("./api/server/module.js");
 
 //let addr = "http://192.168.2.118:8080/video";
 let addr = "http://localhost:"+core.dConfig["NODE_TRANSCODER"].server.port+"/api/localvideo";
-let destAddr = "http://localhost:"+core.dConfig["NODE_REPLICATOR"].server.port;
+let destAddr = "http://192.168.2.122:"+core.dConfig["NODE_REPLICATOR"].server.port;
 let quality = ["500k", "1000k", "2000k"];
 let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable

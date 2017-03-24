@@ -2,7 +2,7 @@
 
 //var child_process = require('child_process');
 let contentId = ["123"]; //Id uploader
-let users = ["http://192.168.2.145:9000"]; //@ uploader
+let users = ["http://192.168.2.118:8080/video"]; //@ uploader
 const spawn = require('child_process').spawn;
 
 for(let k = 0; k < contentId.length; k++){
