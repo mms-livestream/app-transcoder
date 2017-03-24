@@ -6,13 +6,13 @@ let fs = require("fs");
 let request = require("request");
 let Infiniteloop = require("infinite-loop");
 
-let addr = process.argv[3];//"http://192.168.2.134:8080/video";
+let addr = process.argv[3].split(",");//"http://192.168.2.134:8080/video";
 let destAddr = "http://192.168.2.122:9000";
 let quality = ["500k", "1000k", "2000k"];
 let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable
 let counterFind = 0;
-let contentId = process.argv[2];
+let contentId = process.argv[2].split(",");
 let uploaderId = ['1', '2'];
 
 for (let j = 0; j < uploaderId.length; j++) {
@@ -22,7 +22,7 @@ for (let i = 0; i < quality.length; i++) {
       var child;
       child = exec(
         `ffmpeg -use_wallclock_as_timestamps 1 -i ` +
-          addr +
+          addr[j] +
           ` -c copy -flags +global_header -map 0 -codec:v libx264 -profile:v main -b:v ` +
           quality[i] +
           ` -vf scale=640:480 -x264opts keyint=12:min-keyint=12:scenecut=-1 -bf 0 -r 24 -f segment -segment_time 6 -segment_format_options movflags=+faststart -reset_timestamps 1 ${uploaderId[j]}/${quality[i]}/${quality[i]}_%d.mp4`,
@@ -32,13 +32,11 @@ for (let i = 0; i < quality.length; i++) {
           if (error !== null) {
             console.log("exec error: " + error);
           }
-
         }
       );
-    },
-    0
-  );
-}}
+    },0);
+};
+};
 
 function mp4box() {
     console.log("=============================>>>>>>>>>>>>>>"+ counter);
@@ -81,7 +79,7 @@ function renameSendDelete () {
     fs.rename(uploaderId[k] + "/" + "2_"+counterFind+"1.m4s", uploaderId[k] + "/" + "out"+qualityDash[0]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[0]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId+"/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[0]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId.slice(k)+"/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+counterRename+".m4s"));
     });
     //Delete
     fs.unlinkSync(uploaderId[k] + "/" +quality[0] + "/" +quality[0] + "_" + counterFind + ".mp4");
@@ -92,7 +90,7 @@ function renameSendDelete () {
   fs.rename(uploaderId[k] + "/" + "3_"+counterFind+"1.m4s", uploaderId[k] + "/" + "out"+qualityDash[1]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[1]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId+"/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[1]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId.slice(k)+"/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+counterRename+".m4s"));
     });
 
     //Delete
@@ -103,7 +101,7 @@ function renameSendDelete () {
   fs.rename(uploaderId[k] + "/" + "4_"+counterFind+"1.m4s", uploaderId[k] + "/" + "out"+qualityDash[2]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[2]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId+"/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[2]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId.slice(k)+"/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+counterRename+".m4s"));
     });
     //Delete
     fs.unlinkSync(uploaderId[k] + "/" + quality[2] + "/" +quality[2] + "_" + counterFind + ".mp4");
@@ -111,15 +109,15 @@ function renameSendDelete () {
     /*--------------------------------------Send mp4 ----------------------------------------*/
 
  fs.rename(uploaderId[k] + "/" + "2_0.mp4", uploaderId[k] + "/" + "out"+qualityDash[0]+"_dash"+".mp4", function(err) {
-      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[0]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId + "/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+".mp4"));
+      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[0]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId.slice(k) + "/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+".mp4"));
     });
 
     fs.rename(uploaderId[k] + "/" + "3_0.mp4", uploaderId[k] + "/" + "out"+qualityDash[1]+"_dash"+".mp4", function(err) {
-      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[1]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId + "/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+".mp4"));
+      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[1]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId.slice(k) + "/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+".mp4"));
     });
 
     fs.rename(uploaderId[k] + "/" + "4_0.mp4", uploaderId[k] + "/" + "out"+qualityDash[2]+"_dash"+".mp4", function(err) {
-      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[2]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId + "/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+".mp4"));
+      fs.createReadStream(uploaderId[k] + "/" + "out"+qualityDash[2]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId.slice(k) + "/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+".mp4"));
     });
 
     counterFind ++;
