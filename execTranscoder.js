@@ -1,5 +1,7 @@
-let contentId = ['123','456']; //Id uploader
-let users = ['http://192.168.2.118:8080/video', 'http://192.168.2.119:8080/video']; //@ uploader
+"use strict";
+
+let contentId = ['1','2']; //Id uploader supprimer uploaderId qui sert a rien
+let users = ['http://192.168.2.118:8080/video', 'http://192.168.2.134:8080/video']; //@ uploader
 let fs = require('fs');
 const spawn = require('child_process').spawn;
 let uploaderId = ['1', '2'], 
@@ -14,7 +16,7 @@ if (!fs.existsSync(uploaderId[i] + "/" + quality[2])){ fs.mkdirSync(uploaderId[i
 
 let ls;
 //for(let k = 0; k < contentId.length; k++){
-	ls = spawn('node', ['transcode.js', contentId, users]);
+	ls = spawn('node', ['transcodeMulti.js', contentId, users]);
 console.log("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<"+ " " + users.slice(1));
 	ls.stdout.on('data', (data) => {
 	  console.log(`stdout: ${data}`);
