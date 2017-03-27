@@ -13,29 +13,28 @@ let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable
 let counterFind = 0;
 let contentId = process.argv[2].split(",");
-//let uploaderId = ['1', '2'];
 
 for (let j = 0; j < contentId.length; j++) {
-for (let i = 0; i < quality.length; i++) {
-  setTimeout(
-    function() {
-      var child;
-      child = exec(
-        `ffmpeg -use_wallclock_as_timestamps 1 -i ` +
-          addr[j] +
-          ` -c copy -flags +global_header -map 0 -codec:v libx264 -profile:v main -b:v ` +
-          quality[i] +
-          ` -vf scale=640:480 -x264opts keyint=12:min-keyint=12:scenecut=-1 -bf 0 -r 24 -f segment -segment_time 6 -segment_format_options movflags=+faststart -reset_timestamps 1 ${contentId[j]}/${quality[i]}/${quality[i]}_%d.mp4`,
-        function(error, stdout, stderr) {
-          util.print("stdout: " + stdout);
-          util.print("stderr: " + stderr);
-          if (error !== null) {
-            console.log("exec error: " + error);
+  for (let i = 0; i < quality.length; i++) {
+    setTimeout(
+      function() {
+        var child;
+        child = exec(
+          `ffmpeg -use_wallclock_as_timestamps 1 -i ` +
+            addr[j] +
+            ` -c copy -flags +global_header -map 0 -codec:v libx264 -profile:v main -b:v ` +
+            quality[i] +
+            ` -vf scale=640:480 -x264opts keyint=12:min-keyint=12:scenecut=-1 -bf 0 -r 24 -f segment -segment_time 6 -segment_format_options movflags=+faststart -reset_timestamps 1 ${contentId[j]}/${quality[i]}/${quality[i]}_%d.mp4`,
+          function(error, stdout, stderr) {
+            util.print("stdout: " + stdout);
+            util.print("stderr: " + stderr);
+            if (error !== null) {
+              console.log("exec error: " + error);
+            }
           }
-        }
-      );
-    },0);
-};
+        );
+      },0);
+  };
 };
 
 function mp4box() {
@@ -49,7 +48,7 @@ function mp4box() {
     var counterTmp = counter - 1;
     var child;
     child = exec(
-      `MP4Box -dash 6000-profile live -bs-switching no -segment-name '$RepresentationID$_${counterTmp}' -out 'mpd.mpd' ${contentId[k]}/${quality[0]}/${quality[0]}_${counterTmp}.mp4 ${contentId[k]}/${quality[1]}/${quality[1]}_${counterTmp}.mp4 ${contentId[k]}/${quality[2]}/${quality[2]}_${counterTmp}.mp4`,
+      `MP4Box -dash 6000-profile live -bs-switching no -segment-name '${contentId[k]}/$RepresentationID$_${counterTmp}' -out 'mpd.mpd' ${contentId[k]}/${quality[0]}/${quality[0]}_${counterTmp}.mp4 ${contentId[k]}/${quality[1]}/${quality[1]}_${counterTmp}.mp4 ${contentId[k]}/${quality[2]}/${quality[2]}_${counterTmp}.mp4`,
       function(error, stdout, stderr) {
         util.print("stdout: " + stdout);
         util.print("stderr: " + stderr);
@@ -66,20 +65,19 @@ function mp4box() {
 function renameSendDelete () {
   for (let k = 0; k < contentId.length; k++){
   if (
-    fs.existsSync("2_"+counterFind+"1.m4s") &&
-    fs.existsSync("3_"+counterFind+"1.m4s") &&
-    fs.existsSync("4_"+counterFind+"1.m4s")
+    fs.existsSync(contentId[k] + "/" + "2_"+counterFind+"1.m4s") &&
+    fs.existsSync(contentId[k] + "/" + "3_"+counterFind+"1.m4s") &&
+    fs.existsSync(contentId[k] + "/" + "4_"+counterFind+"1.m4s")
   ) {
     var counterRename = counterFind + 1;
-    
 
     /*----------------------------------- Quality 500k ---------------------------------*/
 
     // rename
-    fs.rename("2_"+counterFind+"1.m4s", "out"+qualityDash[0]+"_dash"+counterRename+".m4s", function(err) {
+    fs.rename(contentId[k] + "/" + "2_"+counterFind+"1.m4s", contentId[k] + "/" + "out"+qualityDash[0]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream("out"+qualityDash[0]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId[k]+"/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream(contentId[k] + "/" + "out"+qualityDash[0]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId[k]+"/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+counterRename+".m4s"));
     });
     //Delete
     fs.unlinkSync(contentId[k] + "/" +quality[0] + "/" +quality[0] + "_" + counterFind + ".mp4");
@@ -87,10 +85,10 @@ function renameSendDelete () {
 
     /*------------------------------------- Quality 1000k -------------------------------*/
 
-  fs.rename( "3_"+counterFind+"1.m4s", "out"+qualityDash[1]+"_dash"+counterRename+".m4s", function(err) {
+  fs.rename(contentId[k] + "/" + "3_"+counterFind+"1.m4s", contentId[k] + "/" + "out"+qualityDash[1]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream( "out"+qualityDash[1]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId[k]+"/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream(contentId[k] + "/" + "out"+qualityDash[1]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId[k]+"/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+counterRename+".m4s"));
     });
 
     //Delete
@@ -98,28 +96,27 @@ function renameSendDelete () {
   
     /*--------------------------------------- Quality 2000k --------------------------------*/
 
-  fs.rename("4_"+counterFind+"1.m4s", "out"+qualityDash[2]+"_dash"+counterRename+".m4s", function(err) {
+  fs.rename(contentId[k] + "/" + "4_"+counterFind+"1.m4s", contentId[k] + "/" + "out"+qualityDash[2]+"_dash"+counterRename+".m4s", function(err) {
       if ( err ) console.log('ERROR: ' + err);
       // Send
-      fs.createReadStream("out"+qualityDash[2]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId[k]+"/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+counterRename+".m4s"));
+      fs.createReadStream(contentId[k] + "/" + "out"+qualityDash[2]+"_dash"+counterRename+".m4s").pipe(request.put(destAddr +"/api/content/"+contentId[k]+"/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+counterRename+".m4s"));
     });
     //Delete
     fs.unlinkSync(contentId[k] + "/" + quality[2] + "/" +quality[2] + "_" + counterFind + ".mp4");
 
     /*--------------------------------------Send mp4 ----------------------------------------*/
 
- fs.rename("2_0.mp4", "out"+qualityDash[0]+"_dash"+".mp4", function(err) {
-      fs.createReadStream("out"+qualityDash[0]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId[k] + "/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+".mp4"));
+ fs.rename(contentId[k] + "/" + "2_0.mp4", contentId[k] + "/" + "out"+qualityDash[0]+"_dash"+".mp4", function(err) {
+      fs.createReadStream(contentId[k] + "/" + "out"+qualityDash[0]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId[k] + "/"+qualityDash[0]+"/"+ "out"+qualityDash[0]+"_dash"+".mp4"));
     });
 
-    fs.rename("3_0.mp4", "out"+qualityDash[1]+"_dash"+".mp4", function(err) {
-      fs.createReadStream("out"+qualityDash[1]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId[k] + "/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+".mp4"));
+    fs.rename(contentId[k] + "/" + "3_0.mp4", contentId[k] + "/" + "out"+qualityDash[1]+"_dash"+".mp4", function(err) {
+      fs.createReadStream(contentId[k] + "/" + "out"+qualityDash[1]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId[k] + "/"+qualityDash[1]+"/"+ "out"+qualityDash[1]+"_dash"+".mp4"));
     });
 
-    fs.rename("4_0.mp4", "out"+qualityDash[2]+"_dash"+".mp4", function(err) {
-      fs.createReadStream("out"+qualityDash[2]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId[k] + "/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+".mp4"));
+    fs.rename(contentId[k] + "/" + "4_0.mp4", contentId[k] + "/" + "out"+qualityDash[2]+"_dash"+".mp4", function(err) {
+      fs.createReadStream(contentId[k] + "/" + "out"+qualityDash[2]+"_dash"+".mp4").pipe(request.put(destAddr +"/api/mp4/" + contentId[k] + "/"+qualityDash[2]+"/"+ "out"+qualityDash[2]+"_dash"+".mp4"));
     });
-
     counterFind ++;
   }
 }}
