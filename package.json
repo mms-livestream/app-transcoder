@@ -18,7 +18,9 @@
   "homepage": "https://github.com/mms-livestream/app-transcodeur#readme",
   "dependencies": {
     "bluebird": "^3.5.0",
+    "body-parser": "^1.17.1",
     "child_process": "^1.0.2",
+    "express": "^4.15.2",
     "fs": "0.0.1-security",
     "infinite-loop": "^0.2.2",
     "mms-core": "^0.1.12",

@@ -22,6 +22,7 @@ let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable
 let counterFind = 0;
 let contentId = process.argv[2].split(",");
+let count = process.argv[3].split(",");
 
 function mp4box() {
     console.log("=============================>>>>>>>>>>>>>>"+ counter);
@@ -106,7 +107,7 @@ function renameSendDelete () {
 
 class Transcoder {
   constructor() {
-    this.node = "NODE_TRANSCODER";
+    this.node = `NODE_TRANSCODER${count}`;
     this.service = new core.Service(this.node, serviceAPI);
     this.server = new core.Server(this.node, serverAPI, {
       service: this.service,
@@ -127,7 +128,7 @@ class Transcoder {
               quality[i] +
               ` -vf scale=640:480 -x264opts keyint=12:min-keyint=12:scenecut=-1 -bf 0 -r 24 -f segment -segment_time 6 -segment_format_options movflags=+faststart -reset_timestamps 1 ${contentId}/${quality[i]}/${quality[i]}_%d.mp4`,
             // //-use_wallclock_as_timestamps 1 pour forcer la lecture a la bonne vitesse
-            
+
             function(error, stdout, stderr) {
               util.print("stdout: " + stdout);
               util.print("stderr: " + stderr);
@@ -150,9 +151,3 @@ class Transcoder {
 let transcoder = new Transcoder();
 
 transcoder.server.listen();
-
-
-
-
-
-

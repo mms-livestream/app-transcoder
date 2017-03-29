@@ -10,9 +10,11 @@ let fs = require("fs");
 let app = express();
 
 let quality = ["500k", "1000k", "2000k"];
+let count = 0;
 
 app.post("/api/video/:contentId", function(req, res) {
   var contentId = req.params.contentId;
+  count = count + 1;
   console.log(contentId);
   if (!fs.existsSync(contentId)) {
 
@@ -34,7 +36,7 @@ app.post("/api/video/:contentId", function(req, res) {
 
     //execution du transcodeur
     let ls;
-    ls = spawn("node", ["index.js", contentId]);
+    ls = spawn("node", ["index.js", contentId, count]);
     console.log(
       "<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<" + " " + contentId
     );
@@ -50,7 +52,7 @@ app.post("/api/video/:contentId", function(req, res) {
       console.log(`child process exited with code ${code}`);
     });
   }
-  
+
 });
 app.listen(8088);
 console.log("listenning in port 8088");
