@@ -23,7 +23,7 @@
     "express": "^4.15.2",
     "fs": "0.0.1-security",
     "infinite-loop": "^0.2.2",
-    "mms-core": "^0.1.12",
+    "mms-core": "^0.1.16",
     "request": "^2.81.0",
     "util": "^0.10.3"
   }
