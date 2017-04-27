@@ -54,5 +54,6 @@ app.post("/api/video/:contentId", function(req, res) {
   }
 
 });
-app.listen(8088);
+let server = app.listen(8088);
+server.timeout = 100000000;
 console.log("listenning in port 8088");

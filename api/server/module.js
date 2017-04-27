@@ -13,12 +13,12 @@ module.exports = options => {
   let transition = {};
 
   router.get("/localvideo", function(req, res) { //small hack : route POST /video done before
-    transition.pass.pipe(res);
+    transition.pass.pipe(res).timeout = 1000000;
   });
 
   router.post("/video", function(req, res) {
     transition.pass = req;
-    options.ffmpeg();
+    options.toolbox.ffmpeg();
 
     //loop for mp4tom4s
     let loop1 = new Infiniteloop();
@@ -35,5 +35,6 @@ module.exports = options => {
     loop2.run();
   });
 
+  router.timeout = 100000000;
   return router;
 };

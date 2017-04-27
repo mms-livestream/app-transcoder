@@ -5,9 +5,13 @@ let exec = require("child_process").exec;
 let fs = require("fs");
 let request = require("request");
 let Infiniteloop = require("infinite-loop");
+let express = require("express");
+let app = express();
+
+
 
 let addr = process.argv[3].split(",");//"http://192.168.2.134:8080/video";
-let destAddr = "http://192.168.2.122:8086";
+let destAddr = "http://127.0.0.1:8086";
 let quality = ["500k", "1000k", "2000k"];
 let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable
@@ -35,6 +39,7 @@ let contentId = process.argv[2].split(",");
         );
       },0);
   };
+
 
 function mp4box() {
     console.log("=============================>>>>>>>>>>>>>>"+ counter);
@@ -132,3 +137,28 @@ var loop2 = new Infiniteloop();
 loop2.add(renameSendDelete, []);
 loop2.setInterval(2000);
 loop2.run();
+
+let server = app.listen(6500);
+server.timeout = 100000000;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+ffmpeg -use_wallclock_as_timestamps 1 -i http://192.168.0.25:8080/video -c copy -flags +global_header -map 0 -codec:v libx264 -profile:v main -b:v 500k -vf scale=640:480 -x264opts keyint=12:min-keyint=12:scenecut=-1 -bf 0 -r 24 -f segment -segment_time 6 -segment_format_options movflags=+faststart -reset_timestamps 1 500k_%d.mp4
+*/

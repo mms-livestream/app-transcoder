@@ -1,7 +1,7 @@
 "use strict";
 
-let contentId = ['1', '2']; 
-let users = ['http://192.168.2.118:8080/video']; //@ content
+let contentId = ['1']; 
+let users = ['http://192.168.0.25:8080/video']; //@ content
 let fs = require('fs');
 const spawn = require('child_process').spawn;
 let quality = ['500k', '1000k', '2000k'];

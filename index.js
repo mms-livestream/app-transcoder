@@ -16,7 +16,7 @@ let serviceAPI = require("./api/server/module.js");
 
 //let addr = "http://192.168.2.118:8080/video";
 
-let destAddr = "http://192.168.2.122:"+core.dConfig["NODE_REPLICATOR"].server.port;
+let destAddr = "http://127.0.0.1:"+core.dConfig["NODE_REPLICATOR"].server.port;
 let quality = ["500k", "1000k", "2000k"];
 let qualityDash = ["500000", "1000000", "2000000"];
 let counter = 1; //global variable
@@ -103,21 +103,7 @@ function renameSendDelete () {
   }
 }
 
-
-//Class
-
-class Transcoder {
-  constructor() {
-    this.node = `NODE_TRANSCODER${count}`;
-    this.service = new core.Service(this.node, serviceAPI);
-    this.server = new core.Server(this.node, serverAPI, {
-      service: this.service,
-      ffmpeg: this.ffmpeg,
-      toolbox: {mp4box: mp4box, renameSendDelete: renameSendDelete}
-    });
-  }
-
-  ffmpeg() {
+function ffmpeg() {
     for (let i = 0; i < quality.length; i++) {
       setTimeout(
         function() {
@@ -145,6 +131,23 @@ class Transcoder {
   } //ffmpeg
 
 
+//Class
+
+class Transcoder {
+  constructor() {
+    this.node = `NODE_TRANSCODER${count}`;
+    this.service = new core.Service(this.node, serviceAPI);
+    this.server = new core.Server(this.node, serverAPI, {
+      service: this.service,
+      //ffmpeg: this.ffmpeg,
+      toolbox: {ffmpeg: ffmpeg, mp4box: mp4box, renameSendDelete: renameSendDelete}
+    });
+    this.server.timeout = 100000000;
+  }
+
+  
+
+
 }
 
 //Main
@@ -152,3 +155,5 @@ class Transcoder {
 let transcoder = new Transcoder();
 
 transcoder.server.listen();
+transcoder.server.timeout = 100000000;
+
