@@ -142,7 +142,7 @@ class Transcoder {
       //ffmpeg: this.ffmpeg,
       toolbox: {ffmpeg: ffmpeg, mp4box: mp4box, renameSendDelete: renameSendDelete}
     });
-    this.server.timeout = 100000000;
+    //this.server.timeout = 100000000;
   }
 
   
@@ -154,6 +154,9 @@ class Transcoder {
 
 let transcoder = new Transcoder();
 
-transcoder.server.listen();
-transcoder.server.timeout = 100000000;
+transcoder.server.listen()
+.then( (listeningServer) => {
+  //console.log(listeningServer);
+  listeningServer.timeout = 100000000;
+});
 
