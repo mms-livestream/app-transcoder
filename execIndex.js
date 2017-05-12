@@ -8,9 +8,18 @@ let core = require("mms-core");
 const spawn = require("child_process").spawn;
 let fs = require("fs");
 let app = express();
+let exec = require("child_process").exec;
 
 let quality = ["500k", "1000k", "2000k"];
 let count = 0;
+
+let child;
+let tmp;
+child = exec("rm -r 1",function(error,stdout,stderr) {
+  tmp = stdout;
+});
+
+
 
 app.post("/api/video/:contentId", function(req, res) {
   var contentId = req.params.contentId;
